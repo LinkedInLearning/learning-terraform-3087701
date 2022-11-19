@@ -1,6 +1,6 @@
 variable "instance_type" {
   description = "Type of EC2 instance to provision"
-  default     = "t2.micro
+  default     = "t2.micro"
 }
 
 variable "ami_filter" {
@@ -13,7 +13,7 @@ variable "ami_filter" {
 
   default = {
     name  = "bitnami-tomcat-*-x86_64-hvm-ebs-nami"
-    owner = "979382823631"
+    owner = "979382823631" # Bitnami
   }
 }
 
