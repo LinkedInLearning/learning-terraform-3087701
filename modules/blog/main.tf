@@ -21,7 +21,7 @@ module "blog_vpc" {
   name = var.environment.name
   cidr = "${var.environment.network_prefix}.0.0/16"
 
-  azs             = ["us-west-2a","us-west-2b","us-west-2c"]
+  azs             = ["us-east-1a","us-east-1b","us-east-1c"]
   public_subnets  = ["${var.environment.network_prefix}.101.0/24", "${var.environment.network_prefix}.102.0/24", "${var.environment.network_prefix}.103.0/24"]
 
   enable_nat_gateway = true
@@ -88,6 +88,7 @@ module "blog_sg" {
 
   vpc_id  = module.blog_vpc.vpc_id
   name    = "${var.environment.name}-blog"
+
   ingress_rules = ["https-443-tcp","http-80-tcp"]
   ingress_cidr_blocks = ["0.0.0.0/0"]
   egress_rules = ["all-all"]
