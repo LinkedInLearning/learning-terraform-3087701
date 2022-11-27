@@ -17,7 +17,7 @@ data "aws_ami" "app_ami" {
 resource "aws_instance" "web" {
   ami           = data.aws_ami.app_ami.id
   instance_type = "t3.nano"
-  availability_zone = "us-west-2b"
+  availability_zone = "us-east-2b"
 
   tags = {
     Name = "HelloWorld"
