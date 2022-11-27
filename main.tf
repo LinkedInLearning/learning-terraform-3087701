@@ -17,7 +17,6 @@ data "aws_ami" "app_ami" {
 resource "aws_instance" "web" {
   ami           = data.aws_ami.app_ami.id
   instance_type = "a1.medium"
-  availability_zone = "us-east-2b"
 
   tags = {
     Name = "HelloWorld"
