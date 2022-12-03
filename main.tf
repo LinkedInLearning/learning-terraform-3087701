@@ -14,8 +14,16 @@ data "aws_ami" "app_ami" {
   owners = ["979382823631"] # Bitnami
 }
 
-data "aws_vpc" "default" {
-  default = true
+resource “aws_vpc” “prod-vpc” {
+    cidr_block = “10.0.0.0/16”
+    enable_dns_support = “true” #gives you an internal domain name
+    enable_dns_hostnames = “true” #gives you an internal host name
+    enable_classiclink = “false”
+    instance_tenancy = “default”    
+    
+    tags {
+        Name = “prod-vpc”
+    }
 }
 
 resource "aws_instance" "blog" {
@@ -24,7 +32,7 @@ resource "aws_instance" "blog" {
   vpc_security_group_ids = [aws_security_group.blog.id]
 
   tags = {
-    Name = "Learning Terraform"
+    Name = "blog-tf"
   }
 
   subnet_id = "${var.subnet_prv1}"
@@ -36,7 +44,7 @@ resource "aws_security_group" "blog" {
   tags = {
     Terraform = "true"
   }
-  vpc_id = data.aws_vpc.default.id
+  vpc_id = data.aws_vpc.prod-vpc.id
 }
 
 resource "aws_security_group_rule" "blog_http_in" {
