@@ -31,7 +31,7 @@ resource "aws_instance" "blog" {
 
 resource "aws_security_group" "blog" {
   name         = "my-sg"
-  desctription = "Allow HTTP AND HTTPS IN test_webserver"
+  description = "Allow HTTP AND HTTPS IN test_webserver"
 
   vpc_id = data.aws_vpc.default.id
 }
