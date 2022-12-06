@@ -43,7 +43,7 @@ resource "aws_security_group_rule" "http_in" {
   protocol    = "tcp"
   cidr_blocks = ["0.0.0.0/0"]
 
-  aws_security_group.id = aws_security_group.blog.id
+  security_group.id = aws_security_group.blog.id
 }
 
 resource "aws_security_group_rule" "https_in" {
@@ -53,7 +53,7 @@ resource "aws_security_group_rule" "https_in" {
   protocol    = "tcp"
   cidr_blocks = ["0.0.0.0/0"]
 
-  aws_security_group.id = aws_security_group.blog.id
+  security_group.id = aws_security_group.blog.id
 }
 
 resource "aws_security_group_rule" "outbound_rule" {
@@ -63,5 +63,5 @@ resource "aws_security_group_rule" "outbound_rule" {
   protocol    = "-1"
   cidr_blocks = ["0.0.0.0/0"]
 
-  aws_security_group.id = aws_security_group.blog.id
+  security_group.id = aws_security_group.blog.id
 }
