@@ -21,7 +21,7 @@ resource "aws_vpc" "prod-vpc" {
     enable_classiclink = "false"
     instance_tenancy = "default"    
     
-    tags {
+    tags = {
         Name = "prod-vpc"
     }
 }
