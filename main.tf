@@ -35,8 +35,6 @@ resource "aws_instance" "blog" {
     Name = "blog-tf"
   }
 
-  subnet_id = "${var.subnet_prv1}"
-
 }
 
 resource "aws_security_group" "blog" {
