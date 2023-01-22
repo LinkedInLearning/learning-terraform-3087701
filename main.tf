@@ -19,6 +19,6 @@ resource "aws_instance" "banny" {
   instance_type = var.instance_type
 
   tags = {
-    Name = "HelloWorld"
+    Name = "TomcatRev"
   }
 }
