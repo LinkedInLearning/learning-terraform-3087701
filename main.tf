@@ -65,8 +65,5 @@ resource "aws_security_group_rule" "blog_everything_out" {
   security_group_id = aws_security_group.blog.id
 }
 
-module "s3-bucket" "my_terraform_bucket" {
-  source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "3.6.1"
-}
+
 
