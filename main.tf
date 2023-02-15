@@ -14,10 +14,10 @@ data "aws_ami" "app_ami" {
   owners = ["979382823631"] # Bitnami
 }
 
-resource "aws_instance" "web-server-instance" {
-  ami = "ami-0557a15b87f6559cf"
-  instance_type = "t2.micro"
-  availability_zone = "us-east-1a"
+resource "aws_instance" "web" {
+  ami           = data.aws_ami.app_ami.id
+  instance_type = "t3.nano"
+
   tags = {
     Name = "HelloWorld"
   }
