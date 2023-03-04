@@ -22,12 +22,27 @@ resource "aws_instance" "web" {
   ami           = data.aws_ami.app_ami.id
   instance_type = var.instance_type
   
-  vpc_security_group_ids = [aws_security_group.blog.id]
+  vpc_security_group_ids = [module.blog_sg.id.security_group_id]
 
   tags = {
     Name = "HelloWorld"
   }
 }
+
+module "security-group" "blog_sg" {
+  source  = "terraform-aws-modules/security-group/aws"
+  version = "4.17.1"
+  name = "blog_new"
+  
+  vpc_id = data.aws_vpc.default.id
+  
+  ingress_rules = [http-80-tcp, https-8443-tcp]
+  ingress_cidr_blocks = ["0.0.0.0/0"]
+  
+  egress_rules = [all-all]
+  egress_cidr_blocks = ["0.0.0.0/0"]
+}
+  
 resource "aws_security_group" "blog"{
   name        = "blog"
   description = "Allow http and https in. Allow everything out"
