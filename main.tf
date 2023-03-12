@@ -14,7 +14,7 @@ data "aws_ami" "app_ami" {
   owners = ["979382823631"] # Bitnami
 }
 
-module "blob_vpc" {
+module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
   name = "dev"
@@ -32,11 +32,11 @@ module "blob_vpc" {
   }
 }
 
-resource "aws_instance" "blog" {
+resource "aws_instance" "blob" {
   ami           = data.aws_ami.app_ami.id
   instance_type = var.instance_type
 
-  vpc_security_group_ids = [module.blog_sg.security_group_id]
+  vpc_security_group_ids = [module.blob_sg.security_group_id]
 
   tags = {
     Name = "Learning Terraform"
@@ -47,7 +47,7 @@ module "alb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "~> 8.0"
 
-  name = "blog-alb"
+  name = "blob-alb"
 
   load_balancer_type = "application"
 
