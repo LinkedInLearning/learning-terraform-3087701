@@ -14,7 +14,7 @@ data "aws_ami" "app_ami" {
   owners = ["979382823631"] # Bitnami
 }
 
-module "vpc" {
+module "blob_vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
   name = "dev"
@@ -51,8 +51,8 @@ module "alb" {
 
   load_balancer_type = "application"
 
-  vpc_id             = module.vpc.vpc_id
-  subnets            = module.vpc.public_subnets
+  vpc_id             = module.blob_vpc.vpc_id
+  subnets            = module.blob_vpc.public_subnets
   security_groups    = [module.blog_sg.security_group_id]
 
   target_groups = [
