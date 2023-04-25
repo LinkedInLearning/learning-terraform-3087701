@@ -30,7 +30,7 @@ module "blog_vpc" {
     Environment = "dev"
   }
 }
-
+ 
 
 module "blog_autoscaling" {
   source  = "terraform-aws-modules/autoscaling/aws"
