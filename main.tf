@@ -53,6 +53,7 @@ module "blog_alb" {
 
   name = "blog-alb"
 
+
   load_balancer_type = "application"
 
   vpc_id             = module.blog_vpc.vpc_id
