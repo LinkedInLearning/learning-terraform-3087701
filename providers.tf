@@ -6,6 +6,6 @@ terraform {
   }
 }
 
-provider "registry.terraform.io/hashicorp/aws" {
+provider "hashicorp/aws" {
   region  = "us-west-2"
 }
