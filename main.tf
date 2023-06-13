@@ -33,7 +33,7 @@ resource "aws_security_group" "blog" {
   name        = "blog"
   description = "Allow http and https in, allow everything out"
   
-  vpc.id = data.aws_vpc.default.id  # Reference to the above definition of the aws_vpc
+  vpc_id = data.aws_vpc.default.id  # Reference to the above definition of the aws_vpc
 }
 
 resource "aws_security_group_rule" "blog_http_in" {
