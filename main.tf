@@ -56,7 +56,7 @@ module "alb" {
 
   target_groups = [
     {
-      name_prefix      = "${var.environment.name}-"
+      name_prefix      = "blog-"
       backend_protocol = "HTTP"
       backend_port     = 80
       target_type      = "instance"
@@ -72,7 +72,7 @@ module "alb" {
   ]
 
   tags = {
-    Environment = var.environment.name
+    Environment = "dev"
   }
 }
 
