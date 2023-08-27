@@ -1,0 +1,9 @@
+# dot files and folders
+^.*
+
+# plan files
+*.plan
+*.tfstate
+*.tfstate.backup
+
+# backup files
