@@ -1,9 +1,8 @@
 # dot files and folders
-^.*
+.terraform*
+.terraform/
 
 # plan files
 *.plan
 *.tfstate
 *.tfstate.backup
-
-# backup files
