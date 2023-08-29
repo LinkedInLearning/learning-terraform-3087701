@@ -29,12 +29,11 @@ module "autoscaling" {
   source  = "terraform-aws-modules/autoscaling/aws"
 
   # Autoscaling group
-  name = "${var.environment.name}_blog"
+  name = "${var.environment.name}-blog"
 
   min_size                  = var.min_size
   max_size                  = var.max_size
   desired_capacity          = 1
-  wait_for_capacity_timeout = 0
 
   vpc_zone_identifier       = module.blog_vpc.public_subnets
   target_group_arns         = module.blog_alb.target_group_arns
@@ -48,7 +47,7 @@ module "blog_alb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "~> 8.0"
 
-  name = "${var.environment.name}_blog-alb"
+  name = "${var.environment.name}-blog-alb"
 
   load_balancer_type = "application"
 
@@ -90,14 +89,14 @@ module "blog_vpc" {
 
   tags = {
     Terraform = "true"
-    Environment = "dev"
+    Environment = var.environment.name
   }
 }
 
 module "blog_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "5.1.0"
-  name = "${var.environment.name}_blog_new"
+  name = "${var.environment.name}-blog-sg"
 
   vpc_id = module.blog_vpc.public_subnets[0]
 
