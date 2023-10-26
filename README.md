@@ -1,5 +1,9 @@
 # Learning Terraform
-This is the repository for the LinkedIn Learning course `Learning Terraform`. The full course is available from [LinkedIn Learning][lil-course-url].
+This is the repository for the LinkedIn Learning course Learning Terraform. The full course is available from [LinkedIn Learning][lil-course-url].
+
+![Learning Terraform][lil-thumbnail-url] 
+
+Terraform is a DevOps tool for declarative infrastructure—infrastructure as code. It simplifies and accelerates the configuration of cloud-based environments. In this course, instructor Josh Samuelson shows how to use Terraform to configure infrastructure and manage resources with Amazon Web Services (AWS). After demonstrating how to set up AWS for Terraform, Josh covers how Terraform manages your infrastructure, as well as how to use core Terraform commands. He also delves into more advanced topics, including how to leverage code modules from the Terraform registry and how to create your own modules. Upon wrapping up this course, you'll have the knowledge you need to efficiently define and manage infrastructure with this powerful tool.
 
 _See the readme file in the main branch for updated instructions and information._
 ## Instructions
@@ -10,8 +14,15 @@ The branches are structured to correspond to the videos in the course. The namin
 
 The `main` branch contains the starting code for the course and the `final` branch contains the completed code.
 
-[0]: # (Replace these placeholder URLs with actual course URLs)
+### Instructor
 
-[lil-course-url]: https://www.linkedin.com/learning/
-[lil-thumbnail-url]: http://
+Josh Samuelson 
+                            
+DevOps Engineer
 
+                            
+
+Check out my other courses on [LinkedIn Learning](https://www.linkedin.com/learning/instructors/josh-samuelson).
+
+[lil-course-url]: https://www.linkedin.com/learning/learning-terraform-15575129?dApp=59033956
+[lil-thumbnail-url]: https://cdn.lynda.com/course/3087701/3087701-1666200696363-16x9.jpg
