@@ -45,7 +45,6 @@ module "blog_autoscaling" {
   image_id            = data.aws_ami.app_ami.id
 }
 
-
 module "blog_alb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "~> 6.0"
@@ -64,12 +63,6 @@ module "blog_alb" {
       backend_protocol = "HTTP"
       backend_port     = 80
       target_type      = "instance"
-      targets = {
-        my_target = {
-          target_id = aws_instance.blog.id
-          port = 80
-        }
-      }
     }
   ]
 
