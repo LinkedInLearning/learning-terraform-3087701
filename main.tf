@@ -28,7 +28,6 @@ module "blog_vpc" {
     Environment = "dev"
 
   }
-  vpc_id = data.aws_vpc.default.id
 }
 
 resource "aws_security_group_rule" "blog_http_in" {
