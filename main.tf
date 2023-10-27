@@ -14,28 +14,19 @@ data "aws_ami" "app_ami" {
   owners = ["979382823631"] # Bitnami
 }
 
+module "blog_vpc" {
+  source = "terraform-aws-modules/vpc/aws"
 
-data "aws_vpc" "default" {
-  default = true
-}
+  name = "dev"
+  cidr = "10.0.0.0/16"
 
-resource "aws_instance" "blog" {
-  ami                    = data.aws_ami.app_ami.id
-  instance_type          = var.instance_type
-  
-  vpc_security_group_ids = [aws_security_group.blog.id]
-
-  tags = {
-    Name = "Learning Terraform"
-  }
-}
-
-resource "aws_security_group" "blog" {
-  name = "blog"
-  description = "Allow http and https in.  Allow everything out"
+  azs             = ["us-east-1a","us-east-2b","us-east-2c"]
+  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
 
   tags = {
     Terraform = "true"
+    Environment = "dev"
+
   }
   vpc_id = data.aws_vpc.default.id
 }
@@ -70,4 +61,29 @@ resource "aws_security_group_rule" "blog_everything_out" {
   cidr_blocks = ["0.0.0.0/0"]
 
   security_group_id = aws_security_group.blog.id
+}
+
+resource "aws_instance" "blog" {
+  ami                    = data.aws_ami.app_ami.id
+  instance_type          = var.instance_type
+  subnet_id              = module.blog_vpc.public_subnets[0]
+  vpc_security_group_ids = [module.blog_sg.security_group_id]
+
+  subnet_id = module.blog.vpc.public_subnets[0]
+
+  tags = {
+    Name = "Learning Terraform"
+  }
+}
+
+module "blog_sg" {
+  source  = "terraform-aws-modules/security-group/aws"
+  version = "4.13.0"
+
+  vpc_id  = module.blog_vpc.vpc_id
+  name    = "blog"
+  ingress_rules = ["https-443-tcp","http-80-tcp"]
+  ingress_cidr_blocks = ["0.0.0.0/0"]
+  egress_rules = ["all-all"]
+  egress_cidr_blocks = ["0.0.0.0/0"]
 }
