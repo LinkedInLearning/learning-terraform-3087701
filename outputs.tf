@@ -5,3 +5,7 @@ output "instance_ami" {
 output "instance_arn" {
   value = aws_instance.web.arn
 }
+
+output "instance_IP" {
+  value = aws_instance.web.instance_IP
+}
