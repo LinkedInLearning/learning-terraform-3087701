@@ -9,3 +9,6 @@ output "instance_arn" {
 output "instance_IP" {
   value = aws_instance.web.instance_IP
 }
+#tetsts
+
+
