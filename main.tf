@@ -75,7 +75,7 @@ module "blog_alb" {
       name_prefix      = "blog"
       backend_protocol = "HTTP"
       backend_port     = 80
-      target_id        = module.autoscaling.id
+      target_id        = data.aws_ami.app_ami.id
     }
   }
 
