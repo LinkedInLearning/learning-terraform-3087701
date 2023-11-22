@@ -1,96 +1,125 @@
-data "aws_ami" "app_ami" {
-  most_recent = true
+### PROVIDER
+provider "google" {
+  project = var.project-id
+  region  = var.region
+  zone    = var.zone
+}
 
-  filter {
-    name   = "name"
-    values = [var.ami_filter.name]
+### NETWORK
+data "google_compute_network" "default" {
+  name                    = "default"
+}
+
+## SUBNET
+resource "google_compute_subnetwork" "subnet-1" {
+  name                     = var.subnet-name
+  ip_cidr_range            = var.subnet-cidr
+  network                  = data.google_compute_network.default.self_link
+  region                   = var.region
+  private_ip_google_access = var.private_google_access
+}
+
+resource "google_compute_firewall" "default" {
+  name    = "test-firewall"
+  network = data.google_compute_network.default.self_link
+
+  allow {
+    protocol = "icmp"
   }
 
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
+  allow {
+    protocol = "tcp"
+    ports    = ["80", "8080", "1000-2000", "22"]
   }
 
-  owners = [var.ami_filter.owner] # Bitnami
+  source_tags = ["web"]
 }
 
-
-module "blog_vpc" {
-  source = "terraform-aws-modules/vpc/aws"
-
-  name = var.environment.name
-  cidr = "${var.environment.network_prefix}.0.0/16"
-
-  azs             = ["us-west-2a","us-west-2b","us-west-2c"]
-  public_subnets  = ["${var.environment.network_prefix}.101.0/24", "${var.environment.network_prefix}.102.0/24", "${var.environment.network_prefix}.103.0/24"]
-
-
-  tags = {
-    Terraform = "true"
-    Environment = var.environment.name
-  }
-}
-
-
-module "autoscaling" {
-  source  = "terraform-aws-modules/autoscaling/aws"
-  version = "7.2.0"
-  # insert the 1 required variable here
-}
-
-  name = "blog"
-
-  min_size            = var.asg_min
-  max_size            = var.asg_max
-  vpc_zone_identifier = module.blog_vpc.public_subnets
-  target_group_arns   = module.blog_alb.target_group_arns
-  security_groups     = [module.blog_sg.security_group_id]
-  instance_type       = var.instance_type
-  image_id            = data.aws_ami.app_ami.id
-}
-
-module "blog_alb" {
-  source  = "terraform-aws-modules/alb/aws"
-  version = "~> 6.0"
-
-  name = "blog-alb"
-
-  load_balancer_type = "application"
-
-  vpc_id             = module.blog_vpc.vpc_id
-  subnets            = module.blog_vpc.public_subnets
-  security_groups    = [module.blog_sg.security_group_id]
-
-  target_groups = [
-    {
-      name_prefix      = "blog-"
-      backend_protocol = "HTTP"
-      backend_port     = 80
-      target_type      = "instance"
+### COMPUTE
+## NGINX PROXY
+resource "google_compute_instance" "nginx_instance" {
+  name         = "nginx-proxy"
+  machine_type = "f1-micro"
+  tags = ["web"]
+  
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-11"
     }
-  ]
+  }
 
-  http_tcp_listeners = [
-    {
-      port               = 80
-      protocol           = "HTTP"
-      target_group_index = 0
+  network_interface {
+    network = data.google_compute_network.default.self_link
+    subnetwork = google_compute_subnetwork.subnet-1.self_link
+    access_config {
+      
     }
-  ]
-
-  tags = {
-    Environment = "dev"
   }
 }
 
-module "blog_sg" {
-  source  = "terraform-aws-modules/security-group/aws"
-  version = "4.13.0"
+## WEB1
+resource "google_compute_instance" "web1" {
+  name         = "web1"
+  machine_type = "f1-micro"
+  
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-11"
+    }
+  }
 
-  vpc_id  = module.blog_vpc.vpc_id
-  name    = "blog"
-  ingress_rules = ["https-443-tcp","http-80-tcp"]
-  ingress_cidr_blocks = ["0.0.0.0/0"]
-  egress_rules = ["all-all"]
-  egress_cidr_blocks = ["0.0.0.0/0"]
+  network_interface {
+    # A default network is created for all GCP projects
+    network = data.google_compute_network.default.self_link
+    subnetwork = google_compute_subnetwork.subnet-1.self_link
+  }
+}
+## WEB2
+resource "google_compute_instance" "web2" {
+  name         = "web2"
+  machine_type = "f1-micro"
+  
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-11"
+    }
+  }
+
+  network_interface {
+    network = data.google_compute_network.default.self_link
+    subnetwork = google_compute_subnetwork.subnet-1.self_link
+  }
+}
+## WEB3
+resource "google_compute_instance" "web3" {
+  name         = "web3"
+  machine_type = "f1-micro"
+  
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-11"
+    }
+  }
+
+  network_interface {
+    network = data.google_compute_network.default.self_link
+    subnetwork = google_compute_subnetwork.subnet-1.self_link
+  }  
+}
+
+## DB
+resource "google_compute_instance" "mysqldb" {
+  name         = "mysqldb"
+  machine_type = "f1-micro"
+  
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-11"
+    }
+  }
+
+  network_interface {
+    network = data.google_compute_network.default.self_link
+    subnetwork = google_compute_subnetwork.subnet-1.self_link
+  }  
 }
