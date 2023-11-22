@@ -1,41 +1,29 @@
-variable "instance_type" {
-  description = "Type of EC2 instance to provision"
-  default     = "t3.nano"
+### VARIABLES
+variable "project-id" {
+  type = string
 }
 
-variable "ami_filter" {
-  description = "Name filter and owner for AMI"
-
-  type    = object ({
-    name  = string
-    owner = string
-  })
-
-  default = {
-    name  = "bitnami-tomcat-*-x86_64-hvm-ebs-nami"
-    owner = "979382823631" # Bitnami
-  }
+variable "region" {
+  type = string
+  default = "us-central1"
 }
 
-variable "environment" {
-  description = "Deployment environment"
-
-  type        = object ({
-    name           = string
-    network_prefix = string
-  })
-  default = {
-    name           = "dev"
-    network_prefix = "10.0"
-  }
+variable "zone" {
+  type = string
+  default = "us-central1-a"
 }
 
-variable "asg_min" {
-  description = "Minimum instance count for the ASG"
-  default     = 1
+variable "subnet-name" {
+  type = string
+  default = "subnet1"
 }
 
-variable "asg_max" {
-  description = "Maximum instance count for the ASG"
-  default     = 2
+variable "subnet-cidr" {
+  type = string
+  default = "10.127.0.0/20"
+}
+
+variable "private_google_access" {
+  type = bool
+  default = true
 }
