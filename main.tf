@@ -53,16 +53,13 @@ module "blog_alb" {
     bucket = "my-blog-logs"
   }
 
-  listeners = {
-    ex-http-https-redirect = {
-      port     = 80
-      protocol = "HTTP"
-      redirect = {
-        port        = "443"
-        protocol    = "HTTPS"
-        status_code = "HTTP_301"
-      }
+   http_tcp_listeners = [
+    {
+      port               = 80
+      protocol           = "HTTP"
+      target_group_index = 0
     }
+  ]
    
   target_groups = {
     ex-instance = {
