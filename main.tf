@@ -69,7 +69,7 @@ module "blog_alb" {
       target_type      = "instance"
     }
   }
-  }
+  
 
   tags = {
     Environment = "Development"
