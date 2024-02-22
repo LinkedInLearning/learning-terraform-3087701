@@ -47,7 +47,7 @@ module "blog_alb" {
   subnets = module.blog_vpc.public_subnets
 
   # Security Group
-  security_group = module.blog_sg.security_group_id
+  security_groups = module.blog_sg.security_group_id
 
   access_logs = {
     bucket = "my-blog-logs"
