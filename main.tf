@@ -72,12 +72,14 @@ module "blog_alb" {
       target_type      = "instance"
     }
   }
+  }
 
   tags = {
     Environment = "Development"
     Project     = "Blog"
   }
 }
+
 module "blog_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "5.1.0"
