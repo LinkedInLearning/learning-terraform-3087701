@@ -38,6 +38,46 @@ resource "aws_instance" "blog" {
     Name = "HelloWorld"
   }
 }
+
+module "blog_alb" {
+  source = "terraform-aws-modules/alb/aws"
+
+  name    = "blog"
+  vpc_id  = module.blog_vpc.vpc_id
+  subnets = module.blog_vpc.public_subnets
+
+  # Security Group
+  security_group = module.blog_sg.security_group_id
+
+  access_logs = {
+    bucket = "my-blog-logs"
+  }
+
+  listeners = {
+    ex-http-https-redirect = {
+      port     = 80
+      protocol = "HTTP"
+      redirect = {
+        port        = "443"
+        protocol    = "HTTPS"
+        status_code = "HTTP_301"
+      }
+    }
+   
+  target_groups = {
+    ex-instance = {
+      name_prefix      = "h1"
+      protocol         = "HTTP"
+      port             = 80
+      target_type      = "instance"
+    }
+  }
+
+  tags = {
+    Environment = "Development"
+    Project     = "Blog"
+  }
+}
 module "blog_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "5.1.0"
