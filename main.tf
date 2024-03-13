@@ -24,7 +24,7 @@ resource "aws_instance" "blog" {
   vpc_security_group_ids = [module.blog_sg.security_group_id]
 
   tags = {
-    Name = "HelloWorld"
+    Name = "Mohammed_EC2"
   }
 }
 
