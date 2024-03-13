@@ -21,12 +21,30 @@ data "aws_vpc" "default" {
 resource "aws_instance" "blog" {
   ami                    = data.aws_ami.app_ami.id
   instance_type          = var.instance_type
-  vpc_security_group_ids = [aws_security_group.blog.id]
+  vpc_security_group_ids = [module.blog_sg.security_group_id]
 
   tags = {
     Name = "HelloWorld"
   }
 }
+
+module "blog_sg" {
+  source  = "terraform-aws-modules/security-group/aws"
+  version = "5.1.2"
+
+  name        = "blog_new"
+  description = "Security group for the blog application with HTTP and HTTPS access"
+  vpc_id      = data.aws_vpc.default.id
+
+  # Define ingress rules for HTTP and HTTPS
+  ingress_rules = ["http-80-tcp", "https-443-tcp"]
+  ingress_cidr_blocks = ["0.0.0.0/0"]
+
+  # Define egress rule to allow all outbound traffic
+  egress_rules = ["all-all"]
+  egress_cidr_blocks = ["0.0.0.0/0"]
+}
+
 
 resource "aws_security_group" "blog" {
   name        = "blog"
