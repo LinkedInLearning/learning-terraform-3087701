@@ -20,7 +20,7 @@ data "aws_vpc" "default" {
 
 module "blog_vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "3.0.0" # Use an appropriate version
+  version = "3.0.0" # Ensure you use the latest version that's suitable for your use case.
 
   name = "dev-vpc"
   cidr = "10.0.0.0/16"
@@ -38,7 +38,7 @@ resource "aws_instance" "blog" {
   instance_type = "t3.micro"
   subnet_id     = element(module.blog_vpc.public_subnets, 0)
 
-  vpc_security_group_ids = [module.blog_sg.this_security_group_id]
+  vpc_security_group_ids = [module.blog_sg.security_group_id] # Make sure this matches the output from your blog_sg module.
 
   tags = {
     Name = "Mohammed_EC2"
@@ -47,7 +47,7 @@ resource "aws_instance" "blog" {
 
 module "blog_sg" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "4.0.0" # Use an appropriate version
+  version = "4.0.0" # Ensure you use the latest version that's suitable for your use case.
 
   name        = "blog_sg"
   description = "Allow HTTP and HTTPS"
@@ -57,3 +57,5 @@ module "blog_sg" {
   ingress_rules       = ["http-80-tcp", "https-443-tcp"]
   egress_rules        = ["all-all"]
 }
+
+# Note: The security group module should provide an output for `security_group_id` which you should reference in your instance configuration.
