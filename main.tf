@@ -11,12 +11,16 @@ data "aws_ami" "app_ami" {
     values = ["hvm"]
   }
 
-  owners = ["979382823631"]  # Bitnami
+  owners = ["979382823631"] # Bitnami
+}
+
+data "aws_vpc" "default" {
+  default = true
 }
 
 module "blog_vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "2.78.0"  # Replace with the actual version number
+  version = "3.0.0" # Use an appropriate version
 
   name = "dev-vpc"
   cidr = "10.0.0.0/16"
@@ -24,35 +28,32 @@ module "blog_vpc" {
   azs             = ["us-west-2a", "us-west-2b", "us-west-2c"]
   public_subnets  = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
 
-  enable_dns_hostnames = true
-  enable_dns_support   = true
-
   tags = {
-    "Terraform"   = "true"
-    "Environment" = "dev"
+    "Name" = "dev-vpc"
   }
 }
 
-
-module "blog_sg" {
-  source  = "terraform-aws-modules/security-group/aws"
-  version = "5.1.2"
-
-  name        = "blog-security-group"
-  description = "Security group for the blog application with HTTP and HTTPS access"
-  vpc_id      = module.blog_vpc.vpc_id
-
-  ingress_rules = ["http-80-tcp", "https-443-tcp"]
-  egress_rules  = ["all-all"]
-}
-
 resource "aws_instance" "blog" {
-  ami                    = data.aws_ami.app_ami.id
-  instance_type          = "t3.micro"
+  ami           = data.aws_ami.app_ami.id
+  instance_type = "t3.micro"
+  subnet_id     = element(module.blog_vpc.public_subnets, 0)
+
   vpc_security_group_ids = [module.blog_sg.this_security_group_id]
-  subnet_id              = element(module.blog_vpc.public_subnets, 0)
 
   tags = {
     Name = "Mohammed_EC2"
   }
+}
+
+module "blog_sg" {
+  source  = "terraform-aws-modules/security-group/aws"
+  version = "4.0.0" # Use an appropriate version
+
+  name        = "blog_sg"
+  description = "Allow HTTP and HTTPS"
+  vpc_id      = module.blog_vpc.vpc_id
+
+  ingress_cidr_blocks = ["0.0.0.0/0"]
+  ingress_rules       = ["http-80-tcp", "https-443-tcp"]
+  egress_rules        = ["all-all"]
 }
