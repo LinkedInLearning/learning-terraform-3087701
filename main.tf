@@ -1,26 +1,6 @@
-data "aws_ami" "app_ami" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["bitnami-tomcat-*-x86_64-hvm-ebs-*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  owners = ["979382823631"] # Bitnami
-}
-
-data "aws_vpc" "default" {
-  default = true
-}
-
 module "blog_vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "3.0.0" # Ensure you use the latest version that's suitable for your use case.
+  version = "3.0.0"  # Update this to a version compatible with your AWS provider version
 
   name = "dev-vpc"
   cidr = "10.0.0.0/16"
@@ -31,14 +11,14 @@ module "blog_vpc" {
   tags = {
     "Name" = "dev-vpc"
   }
+  # Removed the enable_classiclink and enable_classiclink_dns_support arguments
 }
 
 resource "aws_instance" "blog" {
   ami           = data.aws_ami.app_ami.id
   instance_type = "t3.micro"
   subnet_id     = element(module.blog_vpc.public_subnets, 0)
-
-  vpc_security_group_ids = [module.blog_sg.security_group_id] # Make sure this matches the output from your blog_sg module.
+  vpc_security_group_ids = [module.blog_sg.security_group_id]
 
   tags = {
     Name = "Mohammed_EC2"
@@ -47,7 +27,7 @@ resource "aws_instance" "blog" {
 
 module "blog_sg" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "4.0.0" # Ensure you use the latest version that's suitable for your use case.
+  version = "4.0.0" # Update this to a version compatible with your AWS provider version
 
   name        = "blog_sg"
   description = "Allow HTTP and HTTPS"
@@ -58,4 +38,11 @@ module "blog_sg" {
   egress_rules        = ["all-all"]
 }
 
-# Note: The security group module should provide an output for `security_group_id` which you should reference in your instance configuration.
+# For the aws_eip resource that is giving a deprecation warning, use domain instead of vpc
+resource "aws_eip" "example" {
+  # ... other configuration ...
+
+  domain = "vpc"  # Replaces the deprecated `vpc = true`
+}
+
+# Make sure to apply the correct values for module versions, and remove any deprecated or unsupported arguments from your configuration.
