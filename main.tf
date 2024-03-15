@@ -16,7 +16,7 @@ data "aws_ami" "app_ami" {
 
 module "blog_vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "<appropriate_version>"
+  version = "2.78.0"  # Replace with the actual version number
 
   name = "dev-vpc"
   cidr = "10.0.0.0/16"
@@ -32,6 +32,7 @@ module "blog_vpc" {
     "Environment" = "dev"
   }
 }
+
 
 module "blog_sg" {
   source  = "terraform-aws-modules/security-group/aws"
