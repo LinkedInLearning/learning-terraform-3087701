@@ -1,9 +1,10 @@
 data "aws_ami" "app_ami" {
   most_recent = true
+  include_deprecated = true
 
   filter {
     name   = "name"
-    values = ["bitnami-tomcat-*-x86_64-hvm-ebs-nami"]
+    values = ["bitnami-tomcat-*-x86_64-*"]
   }
 
   filter {
