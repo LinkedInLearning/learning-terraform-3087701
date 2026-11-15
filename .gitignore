@@ -1,0 +1,12 @@
+# Terraform working files (never publish these)
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+*.tfvars
+tfplan
+*.tfplan
+crash.log
+
+# OS noise
+.DS_Store
